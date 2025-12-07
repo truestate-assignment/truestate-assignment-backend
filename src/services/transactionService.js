@@ -30,9 +30,26 @@ exports.getTransactions = async (query) => {
   }
 
   // 2. Filter Logic
-  if (gender) filter.gender = gender;
-  if (region) filter.region = region;
-  if (category) filter.category = category;
+  if (gender) {
+    const genderArray = Array.isArray(gender) ? gender : [gender];
+    if (genderArray.length > 0) filter.gender = { $in: genderArray };
+  }
+  if (region) {
+    const regionArray = Array.isArray(region) ? region : [region];
+    if (regionArray.length > 0) filter.region = { $in: regionArray };
+  }
+  if (category) {
+    const categoryArray = Array.isArray(category) ? category : [category];
+    if (categoryArray.length > 0) filter.category = { $in: categoryArray };
+  }
+  if (query.paymentMethod) {
+    const pmArray = Array.isArray(query.paymentMethod) ? query.paymentMethod : [query.paymentMethod];
+    if (pmArray.length > 0) filter.paymentMethod = { $in: pmArray };
+  }
+  if (query.tags) {
+    const tagsArray = Array.isArray(query.tags) ? query.tags : [query.tags];
+    if (tagsArray.length > 0) filter.tags = { $in: tagsArray };
+  }
 
   // Price Range Filter
   if (minPrice || maxPrice) {
